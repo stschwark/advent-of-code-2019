@@ -9,7 +9,7 @@ import (
 func TestPanelsPaintedAtLeastOnce(t *testing.T) {
 	input := utils.ReadFromFileAndSplit("day11_input.txt", ",")
 
-	want := 0
+	want := 1907
 
 	if program, err := utils.StringsToInts(input); err == nil {
 		if got := PanelsPaintedAtLeastOnce(program); got != want {
