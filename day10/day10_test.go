@@ -29,18 +29,18 @@ func TestSolvePart1(t *testing.T) {
 func TestVaporizedAsteroids(t *testing.T) {
 	asteroids := []string{".#....#####...#..", "##...##.#####..##", "##...#...#.#####.", "..#.....X...###..", "..#.#.....#....##"}
 
-	want := []Location{Location{8, 1}, Location{9, 0}, Location{9, 1}, Location{10, 0}, Location{9, 2}, Location{11, 1}, Location{12, 1}, Location{11, 2}, Location{15, 1}, Location{12, 2}, Location{13, 2}, Location{14, 2}, Location{15, 2}, Location{12, 3}, Location{16, 4}, Location{15, 4}, Location{10, 4}, Location{4, 4}, Location{2, 4}, Location{2, 3}, Location{0, 2}, Location{1, 2}, Location{0, 1}, Location{1, 1}, Location{5, 2}, Location{1, 0}, Location{5, 1}, Location{6, 1}, Location{6, 0}, Location{7, 0}, Location{8, 0}, Location{10, 1}, Location{14, 0}, Location{16, 1}, Location{13, 3}, Location{14, 3}}
+	want := []Position{Position{8, 1}, Position{9, 0}, Position{9, 1}, Position{10, 0}, Position{9, 2}, Position{11, 1}, Position{12, 1}, Position{11, 2}, Position{15, 1}, Position{12, 2}, Position{13, 2}, Position{14, 2}, Position{15, 2}, Position{12, 3}, Position{16, 4}, Position{15, 4}, Position{10, 4}, Position{4, 4}, Position{2, 4}, Position{2, 3}, Position{0, 2}, Position{1, 2}, Position{0, 1}, Position{1, 1}, Position{5, 2}, Position{1, 0}, Position{5, 1}, Position{6, 1}, Position{6, 0}, Position{7, 0}, Position{8, 0}, Position{10, 1}, Position{14, 0}, Position{16, 1}, Position{13, 3}, Position{14, 3}}
 
-	if got := VaporizedAsteroids(asteroids, Location{8, 3}); !reflect.DeepEqual(got, want) {
+	if got := VaporizedAsteroids(asteroids, Position{8, 3}); !reflect.DeepEqual(got, want) {
 		t.Errorf("VaporizedAsteroids() = %v, want %v", got, want)
 	}
 }
 
 func TestSolvePart2(t *testing.T) {
 	asteroids := utils.ReadFromFileAndSplit("day10_input.txt", "\n")
-	vaporized := VaporizedAsteroids(asteroids, Location{20, 18})
+	vaporized := VaporizedAsteroids(asteroids, Position{20, 18})
 
-	want := Location{7, 6}
+	want := Position{7, 6}
 	if got := vaporized[199]; got != want {
 		t.Errorf("VaporizedAsteroids() = %v, want %v", got, want)
 	}

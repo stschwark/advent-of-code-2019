@@ -7,7 +7,7 @@ import (
 
 type asteroidMap []string
 
-type Location struct {
+type Position struct {
 	x, y int
 }
 
@@ -16,7 +16,7 @@ func MaxAsteroidsThatCanBeDetectedFromAStation(asteroids []string) (max int) {
 
 	for y := 0; y < am.height(); y++ {
 		for x := 0; x < am.width(); x++ {
-			l := Location{x, y}
+			l := Position{x, y}
 			if am.asteroidAt(l) {
 				count := am.asteroidsVisibleFrom(l)
 				if count > max {
@@ -29,8 +29,8 @@ func MaxAsteroidsThatCanBeDetectedFromAStation(asteroids []string) (max int) {
 	return max
 }
 
-func (am *asteroidMap) asteroidAt(l Location) bool {
-	return (*am)[l.y][l.x] == '#'
+func (am *asteroidMap) asteroidAt(p Position) bool {
+	return (*am)[p.y][p.x] == '#'
 }
 
 func (am *asteroidMap) width() int {
@@ -48,49 +48,48 @@ func abs(x int) int {
 	return -x
 }
 
-func distanceTo(from, to Location) int {
+func distanceTo(from, to Position) int {
 	return abs(to.x-from.x) + abs(to.y-from.y)
 }
 
-func angleTo(from, to Location) float64 {
+func angleTo(from, to Position) float64 {
 	return math.Mod(360-math.Atan2(float64(from.x-to.x), float64(from.y-to.y))*180.0/math.Pi, 360)
 }
 
-func (am *asteroidMap) locationsRelativeTo(l Location) map[float64][]Location {
-	locations := make(map[float64][]Location)
+func (am *asteroidMap) positionsRelativeTo(p Position) map[float64][]Position {
+	positions := make(map[float64][]Position)
 	for toY := 0; toY < am.height(); toY++ {
 		for toX := 0; toX < am.width(); toX++ {
-			if l.x == toX && l.y == toY {
+			if p.x == toX && p.y == toY {
 				continue
 			}
-			if am.asteroidAt(Location{toX, toY}) {
-				angle := angleTo(l, Location{toX, toY})
-				l := locations[angle]
-				locations[angle] = append(l, Location{toX, toY})
+			if am.asteroidAt(Position{toX, toY}) {
+				angle := angleTo(p, Position{toX, toY})
+				positions[angle] = append(positions[angle], Position{toX, toY})
 			}
 		}
 	}
-	return locations
+	return positions
 }
 
-func (am *asteroidMap) asteroidsVisibleFrom(l Location) (result int) {
-	return len(am.locationsRelativeTo(l))
+func (am *asteroidMap) asteroidsVisibleFrom(p Position) (result int) {
+	return len(am.positionsRelativeTo(p))
 }
 
-func VaporizedAsteroids(asteroids []string, giantLaser Location) (vaporized []Location) {
+func VaporizedAsteroids(asteroids []string, giantLaser Position) (vaporized []Position) {
 	am := asteroidMap(asteroids)
 
-	locations := am.locationsRelativeTo(giantLaser)
-	targetAngles := targetAngles(locations)
+	positions := am.positionsRelativeTo(giantLaser)
+	targetAngles := targetAngles(positions)
 
 	for i := 0; i < am.totalAsteroids()-1; i++ {
 		for _, angle := range targetAngles {
-			targets := locations[angle]
+			targets := positions[angle]
 			if len(targets) > 0 {
 				target := closestTarget(targets, giantLaser)
 
 				vaporized = append(vaporized, target)
-				locations[angle] = locationsWithout(targets, target)
+				positions[angle] = locationsWithout(targets, target)
 			}
 		}
 	}
@@ -98,9 +97,9 @@ func VaporizedAsteroids(asteroids []string, giantLaser Location) (vaporized []Lo
 	return vaporized
 }
 
-func targetAngles(locations map[float64][]Location) []float64 {
+func targetAngles(positions map[float64][]Position) []float64 {
 	angles := []float64{}
-	for angle := range locations {
+	for angle := range positions {
 		angles = append(angles, angle)
 	}
 	sort.Float64s(angles)
@@ -108,24 +107,24 @@ func targetAngles(locations map[float64][]Location) []float64 {
 	return angles
 }
 
-func closestTarget(targets []Location, from Location) (target Location) {
+func closestTarget(targets []Position, from Position) (target Position) {
 	shortest := math.MaxInt64
 
-	for _, location := range targets {
-		distance := distanceTo(from, location)
+	for _, position := range targets {
+		distance := distanceTo(from, position)
 		if distance < shortest {
 			shortest = distance
-			target = location
+			target = position
 		}
 	}
 
 	return target
 }
 
-func locationsWithout(locations []Location, exclude Location) (result []Location) {
-	for _, l := range locations {
-		if l != exclude {
-			result = append(result, l)
+func locationsWithout(positions []Position, exclude Position) (result []Position) {
+	for _, p := range positions {
+		if p != exclude {
+			result = append(result, p)
 		}
 	}
 	return result
@@ -134,8 +133,8 @@ func locationsWithout(locations []Location, exclude Location) (result []Location
 func (am *asteroidMap) totalAsteroids() (total int) {
 	for y := 0; y < am.height(); y++ {
 		for x := 0; x < am.width(); x++ {
-			l := Location{x, y}
-			if am.asteroidAt(l) {
+			p := Position{x, y}
+			if am.asteroidAt(p) {
 				total++
 			}
 		}
