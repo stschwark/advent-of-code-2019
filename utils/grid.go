@@ -19,7 +19,7 @@ func Clear() {
 	cmd.Run()
 }
 
-func (g *Grid) Print(itoa func(int) string) {
+func (g *Grid) Print(paint func(Position, int) string) {
 	minX, minY, maxX, maxY := math.MaxInt64, math.MaxInt64, -math.MaxInt64, -math.MaxInt64
 	for p := range *g {
 		minX = MinInt(minX, p.X)
@@ -30,9 +30,10 @@ func (g *Grid) Print(itoa func(int) string) {
 
 	for y := minY; y <= maxY; y++ {
 		for x := minX; x <= maxX; x++ {
-			val := (*g)[Position{x, y}]
-			if itoa != nil {
-				fmt.Print(itoa(val))
+			position := Position{x, y}
+			val := (*g)[position]
+			if paint != nil {
+				fmt.Print(paint(position, val))
 			} else {
 				fmt.Print(val)
 			}

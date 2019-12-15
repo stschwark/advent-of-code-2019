@@ -23,7 +23,7 @@ func draw(program []int) utils.Grid {
 		}
 	}
 
-	intcode.Run(program, input, output)
+	intcode.Run(program, input, output, nil)
 
 	return grid
 }
@@ -98,7 +98,7 @@ func Play(program []int) (score int) {
 		}
 	}
 
-	intcode.Run(program, input, output)
+	intcode.Run(program, input, output, nil)
 
 	return score
 }

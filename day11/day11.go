@@ -63,7 +63,7 @@ func (r *Robot) Paint(program []int, startPanelColour int) map[Position]int {
 		first = !first
 	}
 
-	intcode.Run(program, input, output)
+	intcode.Run(program, input, output, nil)
 
 	return grid
 }

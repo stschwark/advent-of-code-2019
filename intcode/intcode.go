@@ -131,7 +131,7 @@ func (c *computer) step() int {
 	return opcode
 }
 
-func Run(intcode []int, input func() int, output func(int)) {
+func Run(intcode []int, input func() int, output func(int), interrupt func() bool) {
 	c := computer{}
 	c.memory = make([]int, len(intcode))
 	copy(c.memory, intcode)
@@ -143,6 +143,10 @@ func Run(intcode []int, input func() int, output func(int)) {
 		opcode := c.step()
 
 		if opcode == 99 {
+			break
+		}
+
+		if interrupt != nil && interrupt() {
 			break
 		}
 	}
